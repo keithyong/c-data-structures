@@ -60,24 +60,34 @@ void traverse_linked_list(node *head) {
 /* --- push_front ------------------------------------------------
  * Insert in the front of a linked list, or the beginning */
 void push_front(node **head, char *new_node_str) {
-    node *new_node = malloc(sizeof(*new_node));
-    new_node->str = new_node_str;
-    new_node->next = *head;
-    *head = new_node;
+    if ((*head) == NULL) {
+        *head = malloc(sizeof(*head));
+        (*head)->str = new_node_str;
+        (*head)->next = NULL;
+    } else {
+        node *new_node = malloc(sizeof(*new_node));
+        new_node->str = new_node_str;
+        new_node->next = *head;
+        *head = new_node;
+    }
 }
 
 /* --- push_back -------------------------------------------------
  * Insert in the back of a linked list, or the end */
-void push_back(node *head, char *new_node_str) {
-    /* Move head pointer to last node */
-    while (head->next) {
-        head = head->next;
+void push_back(node **head, char *new_node_str) {
+    if ((*head) == NULL) {
+        push_front(head, new_node_str);
+    } else {
+        /* Move head pointer to last node */
+        while ((*head)->next) {
+            head = &((*head)->next);
+        }
+        
+        node *new_node = malloc(sizeof(*new_node));
+        new_node->str = new_node_str;
+        new_node->next = NULL;
+        (*head)->next = new_node;
     }
-    
-    node *new_node = malloc(sizeof(*new_node));
-    new_node->str = new_node_str;
-    new_node->next = NULL;
-    head->next = new_node;
 }
 
 /* --- search ----------------------------------------------------
@@ -125,6 +135,13 @@ int delete(node **head, char *delete_str) {
     return 0;
 }
 
+void free_list(node **head) {
+    while (*head) {
+        free(*head);
+        head = &((*head)->next);
+    }
+}
+
 /* --- main ------------------------------------------------------ */
 int main(int argc, char *argv[]) {
     char **argv_cpy = argv;
@@ -132,14 +149,14 @@ int main(int argc, char *argv[]) {
     argv_cpy++;
     
     node *head = parse_linked_list(argv_cpy);
+    push_back(&head, "Hello");
+
+
+    push_back(&head, "Beautiful");
+    push_back(&head, "World!");
+    push_front(&head, "Yolo");
     traverse_linked_list(head);
-    push_back(head, "Hello");
-    traverse_linked_list(head);
-    node *search_ans = search(head, "Hello");
-    printf("search_ans->str = %s\n", search_ans->str);
-    delete(&head, argv[1]);
-    delete(&head, argv[2]);
-    delete(&head, argv[3]);
-    delete(&head, "Hello");
+
+    free_list(&head);
     traverse_linked_list(head);
 }

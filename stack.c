@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_STACK_SIZE      100
+static const int MAX_STACK_SIZE = 100;
 
 typedef struct stack {
-    char *stack[MAX_STACK_SIZE];
+    char **stack;
     int num_elements;
 } stack;
 
-stack* newStackFactory() {
+stack* new_stack_factory() {
     stack *s = malloc(sizeof(*s));
+    s->stack = malloc(sizeof(*(s->stack)) * MAX_STACK_SIZE);
     s->num_elements = 0;
     int i;
     for (i = 0; i < MAX_STACK_SIZE; i++)
@@ -17,7 +18,12 @@ stack* newStackFactory() {
     return s;
 }
 
-void printStack(stack *s) {
+void free_stack(stack *s) {
+    free(s->stack);
+    free(s);
+}
+
+void print_stack(stack *s) {
     int i;
     for (i = 0; i < s->num_elements; i++)
         printf("%s ", s->stack[i]);
@@ -52,11 +58,11 @@ char* pop(stack *s){
 }
 
 int main() {
-    stack *st = newStackFactory();
+    stack *st = new_stack_factory();
     push(st, "Hello!");
     push(st, "My");
     push(st, "Name");
-    printStack(st);
+    print_stack(st);
 
     char *popped = pop(st);
     printf("popped = %s\n", popped);
@@ -66,7 +72,7 @@ int main() {
     printf("popped = %s\n", popped);
     pop(st);
     pop(st);
-    printStack(st);
+    print_stack(st);
 
-    free(st);
+    free_stack(st);
 }
