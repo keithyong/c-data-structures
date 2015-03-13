@@ -73,4 +73,6 @@ int print_t(tree *t)
 
     for (i = 0; i < 20; i++)
         printf("%s\n", s[i]);
+
+    return 0;
 }

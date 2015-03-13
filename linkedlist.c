@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-typedef struct node {
-    char* str;
-    struct node *next;
-} node;
+#include "linkedlist.h"
 
 /* --- parse_linked_list -----------------------------------------
  * Given a string array, makes a linked list structure based off 

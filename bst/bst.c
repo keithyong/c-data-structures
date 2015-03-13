@@ -90,6 +90,7 @@ int insert_tree(tree **root, tree *parent, int new_node_data) {
         insert_tree(&((*root)->right), *root, new_node_data);
     }
 
+    return 0;
 }
 
 int delete_tree(tree **root, int target_num) {
@@ -99,7 +100,7 @@ int delete_tree(tree **root, int target_num) {
         /* If node to delete has no children... */
         if (((*root)->left == NULL) && ((*root)->right == NULL)) {
             free(*root);
-            (*root) == NULL;
+            (*root) = NULL;
             return 1;
         }
         /* If left child but not right child */
@@ -133,33 +134,84 @@ int delete_tree(tree **root, int target_num) {
     return 0;
 }
 
+void checkBSTHelper(tree *root, tree *p, int isLeft, int *isBST) {
+    if (root != NULL) {
+        printf("Checking node %d\n", root->data);
+        if (isLeft) {
+            if (root->data > p->data) {
+                printf("Found bad node\n");
+                *isBST = 0;
+            }
+        } else {
+            if (root->data < p->data) {
+                printf("Found bad node\n");
+                *isBST = 0;
+            }
+        }
+
+        checkBSTHelper(root->left, root, 1, isBST);
+        checkBSTHelper(root->right, root, 0, isBST);
+    }
+}
+
+int checkBST(tree *root) {
+    int isBST = 1;
+    checkBSTHelper(root, root, 1, &isBST);
+    return isBST;
+}
+
 int main() {
-    tree *root = tree_factory(7);
+    /* tree *root = tree_factory(7); */
 
-    insert_tree(&root, root->parent, 4);
-    insert_tree(&root, root->parent, 5);
-    insert_tree(&root, root->parent, 6);
-    insert_tree(&root, root->parent, 9);
-    insert_tree(&root, root->parent, 10);
-    insert_tree(&root, root->parent, 2);
-    insert_tree(&root, root->parent, 1);
-
-
-    tree *min_val = find_min(root);
-    tree *max_val = find_max(root);
+    /* insert_tree(&root, root->parent, 4); */
+    /* insert_tree(&root, root->parent, 5); */
+    /* insert_tree(&root, root->parent, 6); */
+    /* insert_tree(&root, root->parent, 9); */
+    /* insert_tree(&root, root->parent, 10); */
+    /* insert_tree(&root, root->parent, 2); */
+    /* insert_tree(&root, root->parent, 1); */
 
 
-    printf("min_val = %d\n", min_val->data);
-    printf("max_val = %d\n", max_val->data);
+    /* tree *min_val = find_min(root); */
+    /* tree *max_val = find_max(root); */
+
+
+    /* printf("min_val = %d\n", min_val->data); */
+    /* printf("max_val = %d\n", max_val->data); */
+    /* print_t(root); */
+
+    /* insert_tree(&root, root->parent, 199); */
+    /* insert_tree(&root, root->parent, 22); */
+    /* print_t(root); */
+
+    /* delete_tree(&root, 7); */
+    /* delete_tree(&root, 9); */
+    /* delete_tree(&root, 4); */
+    /* print_t(root); */
+    /* free_tree(&root); */
+
+    tree *root = tree_factory(6);
+    tree *a = tree_factory(3);
+    root->left = a;
+
+    tree *b = tree_factory(1);
+    a->left = b;
+
+    tree *c = tree_factory(4);
+    b->right = c;
+
+    tree *d = tree_factory(2);
+    c->left = d;
+
+    tree *e = tree_factory(5);
+    c->right = e;
+
+    tree *f = tree_factory(7);
+    root->right = f;
+
+    
+    printf("%d~~~", checkBST(root));
     print_t(root);
 
-    insert_tree(&root, root->parent, 199);
-    insert_tree(&root, root->parent, 22);
-    print_t(root);
-
-    delete_tree(&root, 7);
-    delete_tree(&root, 9);
-    delete_tree(&root, 4);
-    print_t(root);
     free_tree(&root);
 }
